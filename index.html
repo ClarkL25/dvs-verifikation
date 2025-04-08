@@ -26,24 +26,16 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       max-width: 500px;
       width: 100%;
-      text-align: center;
-    }
-
-    .logo {
-      max-width: 140px;
-      margin-bottom: 1.5rem;
     }
 
     p {
       margin-bottom: 1.5rem;
       line-height: 1.5;
-      text-align: left;
     }
 
     label {
       font-weight: 600;
       display: block;
-      text-align: left;
       margin-top: 1rem;
     }
 
@@ -81,7 +73,6 @@
       position: relative;
       display: none;
       animation: fadeIn 0.3s ease;
-      text-align: left;
     }
 
     .message-success {
@@ -111,12 +102,10 @@
 </head>
 <body>
   <div class="container">
-    <img src="https://www.tu.berlin/fileadmin/www/Abbildungen/logos/TU-Berlin-Logo.svg" alt="TU Berlin Logo" class="logo">
-
     <p>Bitte geben Sie in das folgende Eingabefeld die Verifikationsnummer ein, die unten auf der PDF-Bescheinigung angegeben ist. Anschließend bestätigen Sie Ihre Eingabe mit einem Klick auf Verifizieren.</p>
 
     <label for="code">Verifikationsnummer</label>
-    <input type="text" id="code" placeholder="16-stelliger Code">
+    <input type="text" id="code" placeholder="z. B. 12B3C456DE78FG91">
     <button onclick="verify()">Verifizieren</button>
 
     <div class="message-box" id="messageBox">
@@ -150,6 +139,5 @@
   </script>
 </body>
 </html>
-
 
 
