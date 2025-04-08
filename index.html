@@ -120,13 +120,11 @@
       return params.get(name);
     }
 
-    function verify(codeInput = null) {
+    function verify() {
       const inputField = document.getElementById("code");
-      const code = codeInput || inputField.value.trim();
+      const code = inputField.value.trim();
       const messageBox = document.getElementById("messageBox");
       const messageText = document.getElementById("messageText");
-
-      inputField.value = code; // 💡 Immer im Feld anzeigen
 
       if (code === "7B6A63487D2143AF") {
         messageText.textContent = "Die vorliegende Bescheinigung vom 07.04.2025 ist gültig.";
@@ -145,11 +143,11 @@
       box.className = "message-box";
     }
 
-    // Automatische Verifizierung bei URL-Parameter ?code=
+    // Nur Code ins Feld einfügen – keine automatische Verifizierung
     window.addEventListener("DOMContentLoaded", () => {
       const codeFromURL = getQueryParam("code");
       if (codeFromURL) {
-        verify(codeFromURL); // ✅ Code wird geprüft und im Feld angezeigt
+        document.getElementById("code").value = codeFromURL;
       }
     });
   </script>
