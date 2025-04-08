@@ -2,134 +2,152 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>DVS Verifikation</title>
+  <title>Verifikation</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
-      font-size: 10pt;
-      margin: 20px;
-      color: black;
-      background-color: white;
-    }
-
-    .top-nav {
-      font-size: 10pt;
-      margin-bottom: 20px;
-    }
-
-    label, input[type="text"], input[type="submit"] {
-      font-size: 10pt;
-    }
-
-    .help-text {
-      margin-bottom: 15px;
-    }
-
-    input[type="text"] {
-      width: 300px;
-      padding: 5px;
-      margin-top: 5px;
-    }
-
-    input[type="submit"] {
-      padding: 5px 12px;
-      margin-top: 10px;
-    }
-
-    /* Overlay-Fenster */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.4);
-      display: none;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
       justify-content: center;
-      align-items: center;
-      z-index: 999;
+      align-items: flex-start;
+      min-height: 100vh;
     }
 
-    .overlay-content {
+    .container {
       background-color: #fff;
-      padding: 30px 20px;
-      border-radius: 5px;
-      width: 90%;
-      max-width: 400px;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
       text-align: center;
+    }
+
+    .logo {
+      max-width: 140px;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      text-align: left;
+      margin-top: 1rem;
+    }
+
+    input {
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      width: 100%;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      width: 100%;
+      font-size: 1rem;
+      border: none;
+      background-color: #2c2c2c;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .message-box {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #999;
+      border-radius: 4px;
       position: relative;
-      font-size: 12pt;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none;
+      animation: fadeIn 0.3s ease;
+      text-align: left;
+    }
+
+    .message-success {
+      background-color: #e7f9ed;
+      border-color: #6ac38f;
+    }
+
+    .message-error {
+      background-color: #fdebea;
+      border-color: #e08d89;
     }
 
     .close-btn {
       position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 16pt;
+      top: 6px;
+      right: 10px;
       font-weight: bold;
-      color: #666;
       cursor: pointer;
+      font-size: 1.2rem;
     }
 
-    .close-btn:hover {
-      color: black;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <img src="https://www.tu.berlin/fileadmin/www/Abbildungen/logos/TU-Berlin-Logo.svg" alt="TU Berlin Logo" class="logo">
 
-  <div class="top-nav">
-    <a href="#">Abmelden</a>
-  </div>
+    <p>Bitte geben Sie in das folgende Eingabefeld die Verifikationsnummer ein, die unten auf der PDF-Bescheinigung angegeben ist. Anschließend bestätigen Sie Ihre Eingabe mit einem Klick auf Verifizieren.</p>
 
-  <div class="help-text">
-    Bitte geben Sie in das folgende Eingabefeld die Verifikationsnummer ein, die unten auf der PDF-Bescheinigung angegeben ist. Anschließend bestätigen Sie Ihre Eingabe mit einem Klick auf Verifizieren.
-  </div>
+    <label for="code">Verifikationsnummer</label>
+    <input type="text" id="code" placeholder="16-stelliger Code">
+    <button onclick="verify()">Verifizieren</button>
 
-  <form onsubmit="return checkCode(event)">
-    <label for="code">Verifikationsnummer</label><br>
-    <input type="text" id="code" name="code" required><br>
-    <input type="submit" value="Verifizieren">
-  </form>
-
-  <!-- Overlay-Fenster -->
-  <div id="overlay" class="overlay">
-    <div class="overlay-content">
-      <span class="close-btn" onclick="closeOverlay()">×</span>
-      <p id="overlayText">Platzhalter-Text</p>
+    <div class="message-box" id="messageBox">
+      <span class="close-btn" onclick="closeBox()">×</span>
+      <div id="messageText"></div>
     </div>
   </div>
 
   <script>
-    function checkCode(event) {
-      event.preventDefault();
-      const input = document.getElementById("code").value.trim();
-      const overlay = document.getElementById("overlay");
-      const text = document.getElementById("overlayText");
+    function verify() {
+      const code = document.getElementById("code").value.trim();
+      const messageBox = document.getElementById("messageBox");
+      const messageText = document.getElementById("messageText");
 
-      if (input === "7B6A63487D2143AF") {
-        text.textContent = "Die vorliegende Bescheinigung vom 07.04.2025 ist gültig.";
+      if (code === "7B6A63487D2143AF") {
+        messageText.textContent = "Die vorliegende Bescheinigung vom 07.04.2025 ist gültig.";
+        messageBox.className = "message-box message-success";
       } else {
-        text.textContent = "Die eingegebene Prüfnummer ist nicht bekannt.";
+        messageText.textContent = "Die angegebene Prüfnummer ist nicht bekannt.";
+        messageBox.className = "message-box message-error";
       }
 
-      overlay.style.display = "flex";
+      messageBox.style.display = "block";
     }
 
-    function closeOverlay() {
-      document.getElementById("overlay").style.display = "none";
-    }
-
-    // Optional: Schließen bei Klick außerhalb des Fensters
-    window.onclick = function(e) {
-      const overlay = document.getElementById("overlay");
-      if (e.target === overlay) {
-        closeOverlay();
-      }
+    function closeBox() {
+      const box = document.getElementById("messageBox");
+      box.style.display = "none";
+      box.className = "message-box"; // Reset style
     }
   </script>
-
 </body>
 </html>
 
