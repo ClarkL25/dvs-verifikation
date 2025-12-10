@@ -105,7 +105,7 @@
     <p>Bitte geben Sie in das folgende Eingabefeld die Verifikationsnummer ein, die unten auf der PDF-Bescheinigung angegeben ist. Anschließend bestätigen Sie Ihre Eingabe mit einem Klick auf Verifizieren.</p>
 
     <label for="code">Verifikationsnummer</label>
-    <input type="text" id="code" placeholder="z. B. 12AB3456CDE7FG89">
+    <input type="text" id="code" placeholder="z. B. 12AB3456CDE7FG89">
     <button onclick="verify()">Verifizieren</button>
 
     <div class="message-box" id="messageBox">
@@ -129,7 +129,12 @@
       if (code === "7B6A63487D2143AF") {
         messageText.textContent = "Die vorliegende Bescheinigung vom 07.04.2025 ist gültig.";
         messageBox.className = "message-box message-success";
-      } else {
+      }
+      else if (code === "9F4C8A21BD7630EE") {
+        messageText.textContent = "Die vorliegende Bescheinigung vom 10.12.2025 ist gültig.";
+        messageBox.className = "message-box message-success";
+      }
+      else {
         messageText.textContent = "Die angegebene Prüfnummer ist nicht bekannt.";
         messageBox.className = "message-box message-error";
       }
@@ -143,7 +148,6 @@
       box.className = "message-box";
     }
 
-    // Nur Code ins Feld einfügen – keine automatische Verifizierung
     window.addEventListener("DOMContentLoaded", () => {
       const codeFromURL = getQueryParam("code");
       if (codeFromURL) {
@@ -153,3 +157,4 @@
   </script>
 </body>
 </html>
+
